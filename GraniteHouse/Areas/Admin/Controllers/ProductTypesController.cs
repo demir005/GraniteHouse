@@ -17,14 +17,10 @@ namespace GraniteHouse.Areas.Admin.Controllers
             _db = db;
         }
 
-        private ActionResult Create()
-        {
-            return View();
-        }
 
         public IActionResult Index()
         {
-            return View();
+            return View(_db.ProductTypes.ToList());
         }
     }
 }
