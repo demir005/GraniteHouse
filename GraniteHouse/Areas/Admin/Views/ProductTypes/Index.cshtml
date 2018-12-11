@@ -1,6 +1,9 @@
-﻿@{
+﻿@model IEnumerable<GraniteHouse.Models.ProductTypes>
+@{
     ViewData["Title"] = "Index";
 }
+
+<br /><br />
 
 <div class="row">
     <div class="col-6">
@@ -17,8 +20,21 @@
     <table class="table table-striped border">
         <tr class="table-info">
             <th>
-               
+                @Html.DisplayNameFor(m=>m.Name)
             </th>
+            <th></th>
         </tr>
+
+       @foreach(var item in Model)
+       {
+           <tr>
+               <td>
+                   @Html.DisplayNameFor(m=>item.Name)
+               </td>
+               <td>
+                   EDIT | DELETE | UPDATE
+               </td>
+           </tr>
+       }
     </table>
 </div>
