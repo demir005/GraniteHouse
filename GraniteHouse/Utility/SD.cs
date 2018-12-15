@@ -8,6 +8,6 @@ namespace GraniteHouse.Utility
     public class SD
     {
         public const string DefaultProductImage = "default_image.jbg";
-        public const string ImageFolder = @"image\ProductImage";
+        public const string ImageFolder = @"images\ProductImage";
     }
 }
