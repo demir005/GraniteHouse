@@ -42,5 +42,57 @@ namespace GraniteHouse.Areas.Customer.Controllers
             }
             return View(ShoppingCartVM);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Index")]
+        public IActionResult IndexPost()
+        {
+            List<int> lstCartItem = HttpContext.Session.Get<List<int>>("ssShoppingCart");
+
+            ShoppingCartVM.Appointments.AppointmentDate = ShoppingCartVM.Appointments.AppointmentDate
+                                                                        .AddHours(ShoppingCartVM.Appointments.AppointmentTime.Hour)
+                                                                        .AddMinutes(ShoppingCartVM.Appointments.AppointmentTime.Minute);
+            Appointments appointments = ShoppingCartVM.Appointments;
+            _db.Appointments.Add(appointments);
+            _db.SaveChanges();
+
+            int appointmentId = appointments.Id;
+
+            foreach(int productId in lstCartItem)
+            {
+                ProductsSelectedForAppointment productSelectedForAppointment = new ProductsSelectedForAppointment()
+                {
+                    AppointmentId = appointmentId,
+                    ProductId = productId
+                    
+                };
+                _db.ProductsSelectedForAppointment.Add(productSelectedForAppointment);
+
+            }
+            _db.SaveChanges();
+            lstCartItem = new List<int>();
+            HttpContext.Session.Set("ssShoppingCart", lstCartItem);
+
+            return RedirectToAction("Index");
+        }
+
+
+
+        public IActionResult Remove(int id)
+        {
+            List<int> lstCartItem = HttpContext.Session.Get<List<int>>("ssShoppingCart");
+
+            if(lstCartItem.Count > 0)
+            {
+                if(lstCartItem.Contains(id))
+                {
+                    lstCartItem.Remove(id);
+                }
+            }
+            HttpContext.Session.Set("ssShoppingCart", lstCartItem);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
