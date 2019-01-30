@@ -26,7 +26,7 @@ namespace GraniteHouse.Areas.Admin.Controllers
         public async Task<IActionResult>  Index()
         {
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-            var claimsIdentity = (ClaimsIdentity)this.User.Identities;
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
             AppointmentViewModel appointmentVM = new AppointmentViewModel()
