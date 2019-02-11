@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using GraniteHouse.Data;
+using GraniteHouse.Models;
 using GraniteHouse.Models.ViewModel;
 using GraniteHouse.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +24,31 @@ namespace GraniteHouse.Areas.Admin.Controllers
         {
             _db = db;
         }
+
+
+        public async Task<IActionResult> Edit(int? Id)
+        {
+            if(Id ==  null)
+            {
+                return NotFound();
+            }
+            var productList = (IEnumerable<Products>)(from p in _db.Products
+                                                   join a in _db.ProductsSelectedForAppointment
+                                                   on p.Id equals a.ProductId
+                                                   where a.AppointmentId == Id
+                                                   select p).Include("ProductTypes");
+
+            AppointmentDetailsViewModel objAppointmentVM = new AppointmentDetailsViewModel()
+            {
+                Appointment = _db.Appointments.Include(a => a.SalesPerson).Where(a => a.Id == Id).FirstOrDefault(),
+                SalesPerson = _db.ApplicationUser.ToList(),
+                Products = productList.ToList()
+            };
+
+            return View(objAppointmentVM); 
+           
+        }
+
 
         public async Task<IActionResult>  Index(string searchName=null, string searchEmail = null, string searchPhone=null, string searchDate = null)
         {
