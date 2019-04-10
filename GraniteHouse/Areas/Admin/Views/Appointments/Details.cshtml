@@ -97,11 +97,11 @@
 
 
 
-@section Scripts{
+@section Scripts {
     
     <script>
 
-        $(document).ready(function () {
+      $(document).ready(function () {
             var appointmentTime = document.getElementById('datepicker').value;
             var splitData = "";
             if (appointmentTime.indexOf(" ") > 0) {
@@ -117,7 +117,8 @@
             var amPmTime = splitData[2];
             $('#datepicker').attr('value', splitData[0]);
             $('#timepicker').attr('value', time + ' ' + amPmTime);
-        });
+      });
+
     </script>
 }
 

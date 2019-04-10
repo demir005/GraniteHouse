@@ -118,11 +118,15 @@
             dropdown: true,
             scrollbar: true
         });
-        $(function () {
+
+         $(function () {
             $("#datepicker").datepicker({
                 minDate: +1, maxDate: "+3M"
             });
-        });
+         });
+
+        
+
         $(document).ready(function () {
             var appointmentTime = document.getElementById('datepicker').value;
             var splitData = "";
@@ -138,7 +142,8 @@
             }
             var amPmTime = splitData[2];
             $('#datepicker').attr('value', splitData[0]);
-            $('#timepicker').attr('value', time + ' ' + amPmTime);
+            $('#timepicker').attr('value', time + ' ' + split);
         });
+
     </script>
 }
