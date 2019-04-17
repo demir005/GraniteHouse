@@ -20,6 +20,8 @@ namespace GraniteHouse.Areas.Admin.Controllers
     {
         private readonly ApplicationDbContext _db;
 
+        private int PageSize = 5;
+
         public AppointmentsController(ApplicationDbContext db)
         {
             _db = db;
@@ -80,7 +82,7 @@ namespace GraniteHouse.Areas.Admin.Controllers
         }
 
 
-        public async Task<IActionResult>  Index(string searchName=null, string searchEmail = null, string searchPhone=null, string searchDate = null)
+        public async Task<IActionResult>  Index(int productPage=1 , string searchName=null, string searchEmail = null, string searchPhone=null, string searchDate = null)
         {
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
@@ -90,7 +92,33 @@ namespace GraniteHouse.Areas.Admin.Controllers
             {
                 Appointments = new List<Models.Appointments>()
             };
-       
+
+
+            StringBuilder param = new StringBuilder();
+
+            param.Append("/Admin/Appointments?productPage=:");
+            param.Append("&searchName");
+
+            if(searchName!=null)
+            {
+                param.Append(searchName);
+            }
+
+            if (searchEmail != null)
+            {
+                param.Append(searchEmail);
+            }
+
+            if (searchPhone != null)
+            {
+                param.Append(searchName);
+            }
+
+            if (searchDate != null)
+            {
+                param.Append(searchDate);
+            }
+
             appointmentVM.Appointments = _db.Appointments.Include(a => a.SalesPerson).ToList();
 
             if (searchName != null)
@@ -119,6 +147,18 @@ namespace GraniteHouse.Areas.Admin.Controllers
 
             }
 
+            var coutn = appointmentVM.Appointments.Count;
+            appointmentVM.Appointments = appointmentVM.Appointments.OrderBy(p => p.AppointmentDate)
+                .Skip((productPage - 1) * PageSize)
+                .Take(PageSize).ToList();
+
+            appointmentVM.PagingInfo = new PagingInfo
+            {
+                CurrentPage = productPage,
+                ItemPerPage = PageSize,
+                TotalItems = coutn,
+                urlParam = param.ToString()
+            };
 
             return View(appointmentVM);
         }
